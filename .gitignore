@@ -44,3 +44,13 @@ uploads/*
 
 # Misc
 *.tgz
+
+node_modules
+.env
+coverage
+junit.xml
+security-reports
+monitoring-reports
+build-info
+npm-debug.log
+.DS_Store

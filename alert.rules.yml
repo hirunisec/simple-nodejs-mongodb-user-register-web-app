@@ -1,0 +1,11 @@
+groups:
+  - name: user-crud-alerts
+    rules:
+      - alert: UserCrudAppDown
+        expr: up{job="user-crud-prod"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "User CRUD production app is down"
+          description: "Prometheus cannot scrape metrics from the production app."

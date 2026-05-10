@@ -1,0 +1,50 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: user-crud-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+
+  app-staging:
+    image: user-crud-app:${APP_VERSION:-latest}
+    container_name: user-crud-staging
+    restart: unless-stopped
+    environment:
+      - PORT=5500
+      - DB_URL=mongodb://mongo:27017/user_register_staging
+      - NODE_ENV=staging
+      - SESSION_SECRET=staging_secret
+    ports:
+      - "5501:5500"
+    depends_on:
+      - mongo
+
+  app-prod:
+    image: user-crud-app:${APP_VERSION:-latest}
+    container_name: user-crud-prod
+    restart: unless-stopped
+    environment:
+      - PORT=5500
+      - DB_URL=mongodb://mongo:27017/user_register_prod
+      - NODE_ENV=production
+      - SESSION_SECRET=production_secret
+    ports:
+      - "5502:5500"
+    depends_on:
+      - mongo
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: user-crud-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert.rules.yml:/etc/prometheus/alert.rules.yml
+    depends_on:
+      - app-prod
+
+volumes:
+  mongo_data:
