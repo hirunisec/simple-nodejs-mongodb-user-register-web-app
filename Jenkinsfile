@@ -155,7 +155,7 @@ pipeline {
                 sh '''
                     export APP_VERSION=${APP_VERSION}
                     docker compose up -d app-prod
-                    docker compose up -d prometheus
+                    docker compose up -d --build prometheus
                     docker ps
                 '''
             }

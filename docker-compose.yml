@@ -35,14 +35,14 @@ services:
       - mongo
 
   prometheus:
-    image: prom/prometheus:latest
+    build:
+      context: ./prometheus
+      dockerfile: Dockerfile
+    image: user-crud-prometheus:${APP_VERSION:-latest}
     container_name: user-crud-prometheus
     restart: unless-stopped
     ports:
       - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./alert.rules.yml:/etc/prometheus/alert.rules.yml
     depends_on:
       - app-prod
 
