@@ -126,6 +126,11 @@ pipeline {
 
         stage('Deploy to Staging') {
             steps {
+                echo 'Cleaning old application containers before staging deployment...'
+
+                sh '''
+                    docker rm -f user-crud-mongo user-crud-staging user-crud-prod user-crud-prometheus || true
+                '''
                 echo 'Deploying application to staging environment using Docker Compose...'
 
                 sh '''
